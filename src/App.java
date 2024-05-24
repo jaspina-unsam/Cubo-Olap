@@ -1,12 +1,14 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import api.DataParser;
+import api.CsvReader;
+
 public class App {
     public static void main(String[] args) {
         try {
-            CsvReader reader = new CsvReader("data/fechas.csv");
-            System.out.println(reader.getCsvAsTable());
-            reader.closeFile();
+            DataParser parser = new CsvReader();
+            System.out.println(parser.read("data/fechas.csv"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
