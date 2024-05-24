@@ -72,6 +72,7 @@ public final class InmutableCube{
     }
 
     public Dimension getDimension(String name) {
+        
         return dimensionMap.get(name);
     }
 

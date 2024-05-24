@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CsvReader implements DataParser{
+public class CsvParser implements DataParser{
 
     public List<List<String>> readData(String filepath, String delimiter, boolean dropIndex) throws IOException {
         List<List<String>> data = new ArrayList<>();
