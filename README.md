@@ -50,36 +50,36 @@ Funcionalidad
 
 Funcion (en concepto, faltaría tener las otras cosas más completas para probar algo como esto)
 
-public void roll-up() {
-	this.columnaKey = columnaKey + 1;
-}
+> public void roll-up() {
+>	this.columnaKey = columnaKey + 1;
+> }
 
-public void roll-up(int nivel) {
-	this.columnaKey = nivel;
-}
+> public void roll-up(int nivel) {
+> 	this.columnaKey = nivel;
+> }
 
-public void roll-up(String nivel) {
-	for (nombreColumna : columnas)
-	this.columnaKey = ;
-}
-
-
-public void drill-down() {
-	this.columnaKey = columnaKey - 1;
-}
-
-public void drill-down(int nivel) {
-	this.columnaKey = nivel;
-}
-
-public void drill-down(String nivel) {
-	this.columnaKey = ;
-}
+> public void roll-up(String nivel) {
+> 	for (nombreColumna : columnas)
+> 	this.columnaKey = ;
+> }
 
 
-public Cube slice(String dimension, ) {
-	
-	return cubo;
-}
+> public void drill-down() {
+>	this.columnaKey = columnaKey - 1;
+> }
+
+> public void drill-down(int nivel) {
+>	this.columnaKey = nivel;
+> }
+
+> public void drill-down(String nivel) {
+> 	this.columnaKey = ;
+> }
+
+
+> public Cube slice(String dimension, ) {
+>	
+>	return cubo;
+> }
 
 
