@@ -51,7 +51,7 @@ public class CsvParser implements DataParser{
 
     @Override
     public List<List<String>> read(String filepath) throws IOException {
-        return readData(filepath, ",", true);
+        return readData(filepath, ";", false);
     }
 
 }

@@ -1,53 +1,70 @@
 package core;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import api.DataType;
+import api.CsvParser;
 
 public class Dimension {
     private Map<String, List<Object>> levelMap;
-    private List<DataType> types;
     private List<String> levels;
+    private Map<Object, Set<Integer>> valueToCells;
+    private int foreignKey;
 
-    public Dimension(List<List<String>> data, List<DataType> types) {
-        this.types = types;
+    public Dimension(List<List<String>> data, int foreignKey) {
         buildLevelMap(data);
+        this.foreignKey = foreignKey;
+    }
+
+    public Dimension(String filePath, int foreignKey) throws IOException {
+        CsvParser csvParser = new CsvParser();
+        List<List<String>> data = csvParser.read(filePath);
+        buildLevelMap(data);
+        this.foreignKey = foreignKey;
     }
 
     private void buildLevelMap(List<List<String>> data) {
-        Map<String, List<Object>> result = new HashMap<>();
+        levelMap = new HashMap<>();
+        valueToCells = new HashMap<>();
         levels = data.get(0);
         for (String header : levels) {
-            result.put(header, new ArrayList<>());
+            levelMap.put(header, new ArrayList<>());
         }
-        for (List<String> row : data.subList(1, data.size())) {
+        for (int rowIndex = 1; rowIndex < data.size(); rowIndex++) {
+            List<String> row = data.get(rowIndex);
             for (int i = 0; i < levels.size(); i++) {
-                switch (types.get(i)) {
-                    case INTEGER:
-                        result.get(levels.get(i)).add(Integer.valueOf(row.get(i)));
-                        break;
-                    case FLOAT:
-                        result.get(levels.get(i)).add(Float.valueOf(row.get(i)));
-                        break;
-                    case STRING:
-                        result.get(levels.get(i)).add(String.valueOf(row.get(i)));
-                        break;
-                    case DATE:
-                        result.get(levels.get(i)).add(LocalDate.parse(row.get(i)));
-                        break;
-                    default:
-                        result.get(levels.get(i)).add(String.valueOf(row.get(i)));
-                        break;
+                Object value = parseValue(row.get(i));
+                levelMap.get(levels.get(i)).add(value);
+                
+                valueToCells.putIfAbsent(value, new HashSet<>());
+                valueToCells.get(value).add(rowIndex - 1);
+            }
+        }
+        
+    }
+
+    private Object parseValue(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e1) {
+            try {
+                return Float.parseFloat(value);
+            } catch (NumberFormatException e2) {
+                try {
+                    return LocalDate.parse(value);
+                } catch (DateTimeParseException e3) {
+                    return value;
                 }
             }
         }
-        levelMap = result;
     }
 
     public Set<String> getLevels() {
@@ -69,4 +86,31 @@ public class Dimension {
         return ids;
     }
 
+    public String[] getValues() {
+        return levelMap.keySet().toArray(new String[0]);
+    }
+
+    public int getForeignKey() {
+        return foreignKey;
+    }
+
+    public Set<Integer> getCellIndices(String valor) {
+        Set<Integer> indices = new HashSet<>();
+        for (Map.Entry<String, List<Object>> entry : levelMap.entrySet()) {
+            List<Object> values = entry.getValue();
+            for (int i = 0; i < values.size(); i++) {
+                if (values.get(i).toString().equals(valor)) {
+                    indices.add(i);
+                }
+            }
+        }
+        return indices;
+    }
+
+    public void addFact(int idValue, int cellIndex) {
+        if (!valueToCells.containsKey(idValue)) {
+            throw new IllegalArgumentException("El id " + idValue + " del valor no existe en la dimensión.");
+        }
+        valueToCells.get(idValue).add(cellIndex);
+    }
 }
