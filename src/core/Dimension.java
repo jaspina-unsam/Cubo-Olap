@@ -1,72 +1,85 @@
 package core;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
-import api.DataType;
-
+/**
+ * La clase Dimension representa una dimension de un cubo OLAP.
+ */
 public class Dimension {
-    private Map<String, List<Object>> levelMap;
-    private List<DataType> types;
-    private List<String> levels;
+    private String name;                    // Nombre de la dimension
+    private String idKey;                   //
+    private Map<String, Level> levels;      //
+    private List<String> hierarchy;         //
+    private int currentLevel;               //
 
-    public Dimension(List<List<String>> data, List<DataType> types) {
-        this.types = types;
-        buildLevelMap(data);
+    /**
+     * Método constructor de la clase
+     * 
+     * @param name Nombre de la dimension
+     * @param idKey
+     * @param levels
+     * @param hierarchy
+     */
+    public Dimension(String name, String idKey, Map<String, Level> levels, List<String> hierarchy) {
+        this.name = name;
+        this.idKey = idKey;
+        this.levels = levels;
+        this.hierarchy = hierarchy;
+        this.currentLevel = 0;
     }
 
-    private void buildLevelMap(List<List<String>> data) {
-        Map<String, List<Object>> result = new HashMap<>();
-        levels = data.get(0);
-        for (String header : levels) {
-            result.put(header, new ArrayList<>());
-        }
-        for (List<String> row : data.subList(1, data.size())) {
-            for (int i = 0; i < levels.size(); i++) {
-                switch (types.get(i)) {
-                    case INTEGER:
-                        result.get(levels.get(i)).add(Integer.valueOf(row.get(i)));
-                        break;
-                    case FLOAT:
-                        result.get(levels.get(i)).add(Float.valueOf(row.get(i)));
-                        break;
-                    case STRING:
-                        result.get(levels.get(i)).add(String.valueOf(row.get(i)));
-                        break;
-                    case DATE:
-                        result.get(levels.get(i)).add(LocalDate.parse(row.get(i)));
-                        break;
-                    default:
-                        result.get(levels.get(i)).add(String.valueOf(row.get(i)));
-                        break;
-                }
-            }
-        }
-        levelMap = result;
+    public void addLevel(Level level) {
+        levels.put(level.getName(), level);
     }
 
-    public Set<String> getLevels() {
-        return levelMap.keySet();
+    public void addLevels(Map<String, Level> levels) {
+        this.levels = levels;
     }
 
-    public Set<Object> getLevel(String name) {
-        return new TreeSet<>(levelMap.get(name));
+    public String getLevelNameAt(int index) {
+        return hierarchy.get(index);
     }
 
-    public List<Object> getIdList(String levelName, String value) {
-        List<Object> ids = new ArrayList<>();
-        List<Object> elements = levelMap.get(levelName);
+    public List<String> getLevels() {
+        return this.hierarchy;
+    }
+
+    public List<Integer> getIdList(String value) {
+        List<Integer> ids = new ArrayList<>();
+        String levelName = hierarchy.get(currentLevel);
+        List<Object> elements = levels.get(levelName).getElements();
         for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).toString().equals(value)){
-                ids.add(levelMap.get(levels.get(0)).get(i));
+            if (elements.get(i).toString().equals(value)) {
+                ids.add((Integer) levels.get(idKey).getElements().get(i));
             }
         }
         return ids;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getIdKey() {
+        return this.idKey;
+    }
+
+    public int getCurrentLevel() {
+        return this.currentLevel;
+    }
+
+    public Level getActiveLevel() {
+        return levels.get(hierarchy.get(currentLevel));
+    }
+
+    public void setCurrentLevel(int level) {
+        this.currentLevel = level;
+    }
+
+    @Override
+    public String toString() {
+        return "Dimension [name =" + name + ", idKey =" + idKey + ", currentLevel =" + hierarchy.get(currentLevel) + "]";
+    }
 }
