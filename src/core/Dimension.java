@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,14 @@ public class Dimension {
         this.currentLevel = 0;
     }
 
+    private Dimension(String name, String idKey, List<String> hierarchy, int currentLevel) {
+        this.name = name;
+        this.idKey = idKey;
+        this.levels = new HashMap<>();
+        this.hierarchy = hierarchy;
+        this.currentLevel = currentLevel;
+    }
+
     public void addLevel(Level level) {
         levels.put(level.getName(), level);
     }
@@ -56,6 +65,30 @@ public class Dimension {
             }
         }
         return ids;
+    }
+
+    public Dimension diceDimension(List<String> values) {
+        Dimension newDimension = new Dimension(this.name, this.idKey, this.hierarchy, this.currentLevel);
+        Map<String, Level> newLevels = new HashMap<>();
+        newLevels.put(this.idKey, new Level(this.idKey));
+        for (String levelName : hierarchy) {
+            newLevels.put(levelName, new Level(levelName));
+        }
+
+        // Recorrer los elementos del active level y solamente guardar en newlevels los elementos que coincidan con los valores
+        String levelName = hierarchy.get(currentLevel);
+        List<Object> elements = levels.get(levelName).getElements();
+
+        for (int i = 0; i < elements.size(); i++) {
+            if (values.contains(elements.get(i).toString())) {
+                newLevels.get(idKey).getElements().add(levels.get(idKey).getElements().get(i));
+                for (String level : hierarchy) {
+                    newLevels.get(level).getElements().add(levels.get(level).getElements().get(i));
+                }
+            }
+        }
+        newDimension.addLevels(newLevels);
+        return newDimension;
     }
 
     public String getName() {

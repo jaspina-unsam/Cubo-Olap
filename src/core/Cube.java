@@ -143,23 +143,32 @@ public class Cube {
         return resultCells;
     }
 
+    private Map<String, Dimension> getNewDimensions(Map<String, Dimension> origDims, String[] values, String dimName) {
+        Map<String, Dimension> newDimensions = new HashMap<>(origDims);
+        Dimension dim = newDimensions.get(dimName).diceDimension(List.of(values));
+        newDimensions.put(dimName, dim);
+        return newDimensions;
+    }
+
     public Cube slice(String dimension, String value) {
         String key = dimensions.get(dimension).getIdKey();
         List<Cell> newCells = searchCells(dimension, key, new String[] { value });
-        return new Cube(this.dimensions, this.measures, this.facts, newCells);
+        return new Cube(getNewDimensions(this.dimensions, new String[] {value}, dimension), this.measures, this.facts, newCells);
     }
 
     public Cube dice(String dimension, String[] values) {
         String key = dimensions.get(dimension).getIdKey();
         List<Cell> newCells = searchCells(dimension, key, values);
-        return new Cube(this.dimensions, this.measures, this.facts, newCells);
+        return new Cube(getNewDimensions(this.dimensions, values, dimension), this.measures, this.facts, newCells);
     }
 
     public Cube dice(String dim1, String[] values1, String dim2, String[] values2) {
         String key1 = dimensions.get(dim1).getIdKey();
         String key2 = dimensions.get(dim2).getIdKey();
         List<Cell> newCells = searchCells(dim1, key1, values1, dim2, key2, values2);
-        return new Cube(this.dimensions, this.measures, this.facts, newCells);
+        Map<String, Dimension> newDims1 = getNewDimensions(this.dimensions, values1, dim1);
+        Map<String, Dimension> newDims = getNewDimensions(newDims1, values2, dim2);
+        return new Cube(newDims, this.measures, this.facts, newCells);
     }
 
     public Cube dice(String dim1, String[] values1, String dim2, String[] values2, String dim3, String[] values3) {
@@ -167,7 +176,10 @@ public class Cube {
         String key2 = dimensions.get(dim2).getIdKey();
         String key3 = dimensions.get(dim3).getIdKey();
         List<Cell> newCells = searchCells(dim1, key1, values1, dim2, key2, values2, dim3, key3, values3);
-        return new Cube(this.dimensions, this.measures, this.facts, newCells);
+        Map<String, Dimension> newDims1 = getNewDimensions(this.dimensions, values1, dim1);
+        Map<String, Dimension> newDims2 = getNewDimensions(newDims1, values2, dim2);
+        Map<String, Dimension> newDims = getNewDimensions(newDims2, values3, dim3);
+        return new Cube(newDims, this.measures, this.facts, newCells);
     }
 
     @Override
