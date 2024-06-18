@@ -20,9 +20,14 @@ public class App {
         Cube cube = builder.buildCube();
         Cube cube2 = builder.buildCube();
 
+        cube.selectFact("cantidad");
+        cube.selectMeasure("contar");
+
+        TablePrinter.display(cube);
+
         // print + consultas
         cube = cube.slice("fechas","2018");
-        cube.selectFact("cantidad");
+        cube.selectFact("costo");
         cube.selectMeasure("suma");
         TablePrinter.display(cube, "fechas");
 
@@ -37,6 +42,10 @@ public class App {
 
         Cube cube3 = builder.buildCube();
         cube3 = cube3.dice( "fechas", new String[] {"2018"}, "puntos_venta", new String[] {"California"});
+        cube3.selectMeasure("max");
         TablePrinter.display(cube3, "fechas", "puntos_venta");
+        cube3.selectMeasure("contar");
+        TablePrinter.display(cube3);
+
     }
 }

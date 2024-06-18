@@ -187,6 +187,10 @@ public class Cube {
         return "Cube [Cells=" + cells.size() + ']';
     }
 
+    public Cell getCell() {
+        return Cell.cellFromGroup(this.cells);
+    }
+
     public Cell getCell(String dimension, String value) {
         return Cell.cellFromGroup(searchCells(dimension, dimensions.get(dimension).getIdKey(), new String[] { value }));
     }

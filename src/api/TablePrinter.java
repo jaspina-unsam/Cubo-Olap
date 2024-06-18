@@ -11,7 +11,14 @@ import metrics.Measure;
 public class TablePrinter {
 
     public static void display(Cube cube) {
-        System.out.println(cube);
+        String selectedFact = cube.getSelectedFact();
+        Measure measure = cube.getSelectedMeasure();
+        String[][] tableData = new String[2][1];
+        tableData[0][0] = String.format("%s (%s)", selectedFact, measure.getName());
+
+        Cell cell = cube.getCell();
+        tableData[1][0] = String.format("%.2f", measure.calc(cell.getFacts(selectedFact)));
+        print(tableData);
     }
 
     public static void display(Cube cube, String dimension) {
