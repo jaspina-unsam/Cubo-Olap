@@ -7,13 +7,13 @@ import java.util.List;
  * La clase Level representa un nivel de una dimensión
  */
 public class Level {
-    private String name;                // Nombre del nivel
-    private List<Object> elements;      // Lista de elementos del nivel
+    private String name; // Nombre del nivel
+    private List<Object> elements; // Lista de elementos del nivel
 
-     /**
+    /**
      * Constructor de la clase
      * 
-     * @param name Nombre del nivel
+     * @param name     Nombre del nivel
      * @param elements Lista de elementos del nivel
      */
     public Level(String name, List<Object> elements) {
@@ -21,8 +21,8 @@ public class Level {
         this.elements = elements;
     }
 
-     /**
-     * Constructor de la clase sin sus elementos
+    /**
+     * Constructor de la clase sin elementos
      * 
      * @param name Nombre del nivel
      */
