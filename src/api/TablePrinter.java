@@ -8,12 +8,34 @@ import core.Cube;
 import core.Level;
 import metrics.Measure;
 
+/**
+ * La clase TablePrinter imprime en consola los datos de un cubo.
+ * El método display() recibe un cubo con cierto estado y una, dos o cero dimensiones e imprime sus datos de forma tabular.
+ */
 public class TablePrinter {
 
+    /**
+     * Método que muestra en consola los datos del cubo seleccionado con el hecho y la medida actuales.
+     * 
+     * @param cube Cubo que se quiere mostrar
+     */
     public static void display(Cube cube) {
-        System.out.println(cube);
+        String selectedFact = cube.getSelectedFact();
+        Measure measure = cube.getSelectedMeasure();
+        String[][] tableData = new String[2][1];
+        tableData[0][0] = String.format("%s (%s)", selectedFact, measure.getName());
+
+        Cell cell = cube.getCell();
+        tableData[1][0] = String.format("%.2f", measure.calc(cell.getFacts(selectedFact)));
+        print(tableData);
     }
 
+    /**
+     * Método para mostrar en consola los datos del cubo con una dimensión específica
+     * 
+     * @param cube Cubo que se quiera mostrar
+     * @param dimension Nombre de la dimensión que se quiera usar para representar al cubo
+     */
     public static void display(Cube cube, String dimension) {
         Level lvl = cube.getDimension(dimension).getActiveLevel();
         Set<Object> levelElements = new TreeSet<>(lvl.getElements());
@@ -33,6 +55,13 @@ public class TablePrinter {
         print(tableData);
     }
 
+    /**
+     * Método que representa los datos del cubo para dos dimensiones específicas.
+     * 
+     * @param cube Cubo que se quiere mostrar
+     * @param rowDim Nombre de la dimensión que se quiere usar para las filas
+     * @param colDim Nombre de la dimensión que se quiere usar para las columnas
+     */
     public static void display(Cube cube, String rowDim, String colDim) {
         Level rowLevel = cube.getDimension(rowDim).getActiveLevel();
         Level colLevel = cube.getDimension(colDim).getActiveLevel();
@@ -65,6 +94,11 @@ public class TablePrinter {
         print(tableData);
     }
 
+    /**
+     * Método para imprimir la tabla formateada en la consola.
+     * 
+     * @param tableData Datos de la tabla a imprimir
+     */
     private static void print(String[][] tableData) {
         if (tableData == null || tableData.length == 0) {
             System.out.println("No data to display.");
@@ -81,6 +115,12 @@ public class TablePrinter {
         System.out.println("\n");
     }
 
+    /**
+     * Método que calcula el ancho de cada columna basado en los datos.
+     * 
+     * @param tableData Datos de la tabla
+     * @return Array de anchos de columna
+     */
     private static int[] getColumnWidths(String[][] tableData) {
         int columns = tableData[0].length;
         int[] columnWidths = new int[columns];
@@ -95,6 +135,11 @@ public class TablePrinter {
         return columnWidths;
     }
 
+    /**
+     * Método que imprime una línea de separación basada en los anchos de columna.
+     * 
+     * @param columnWidths Array de anchos de columna
+     */
     private static void printSeparator(int[] columnWidths) {
         for (int width : columnWidths) {
             System.out.print("+");
@@ -105,6 +150,12 @@ public class TablePrinter {
         System.out.println("+");
     }
 
+    /**
+     * Método para imprimir una fila de datos de la tabla.
+     * 
+     * @param row Fila de datos
+     * @param columnWidths Anchos de columna
+     */
     private static void printRow(String[] row, int[] columnWidths) {
         for (int i = 0; i < row.length; i++) {
             System.out.print("| ");

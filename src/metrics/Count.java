@@ -2,6 +2,9 @@ package metrics;
 
 import java.util.List;
 
+/**
+ * La clase Count representa una medida de cuenta
+ */
 public class Count extends Measure {
 
     public Count() {

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * La interfax DataParser define un metodo para leer datos de un archivo.
+ * La interfaz DataParser define un metodo para leer datos de un archivo.
  */
 public interface DataParser {
     /**

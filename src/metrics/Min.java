@@ -3,6 +3,9 @@ package metrics;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * La clase Min representa una medida de valor mínimo
+ */
 public class Min extends Measure{
 
     public Min() {
