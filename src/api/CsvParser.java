@@ -14,14 +14,23 @@ import java.util.regex.Pattern;
  * @see DataParser
  */
 public class CsvParser implements DataParser {
-    private String delimiter;
-    private boolean dropIndex;
+    private String delimiter;           // Delimitador que usa para determinar que carácter separa las columnas
+    private boolean dropIndex;          // Booleano que determina si ignora el índice o no
 
+    /**
+     * Constructor por defecto de la clase
+     */
     public CsvParser() {
         this.delimiter = ";";
         this.dropIndex = false;
     }
 
+    /**
+     * Constructor de la clase
+     * 
+     * @param delimeter Delimitador que usa para determinar que carácter separa las columnas
+     * @param dropIndex Booleano que determina si ignora el índice o no
+     */
     public CsvParser(String delimiter, boolean dropIndex) {
         this.delimiter = delimiter;
         this.dropIndex = dropIndex;
@@ -47,8 +56,8 @@ public class CsvParser implements DataParser {
 
     /**
      * Método para dividir un string en una lista de strings.
-     * @param inputString
-     * @return
+     * @param inputString String a dividir
+     * @return List<String> lista de strings 
      */
     private List<String> splitLine(String inputString) {
         List<String> splitList = new ArrayList<>();

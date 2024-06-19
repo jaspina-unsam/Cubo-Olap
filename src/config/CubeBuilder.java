@@ -11,21 +11,21 @@ import java.util.Map;
 
 import api.DataParser;
 import api.DataType;
-import core.Cell;
-import core.Cube;
-import core.Dimension;
-import core.Level;
-import metrics.Count;
-import metrics.Max;
-import metrics.Min;
-import metrics.Sum;
+import core.*;
+import metrics.*;
 
+/**
+ * La clase CubeBuilder representa la configuración para la creación de un cubo OLAP.
+ */
 public class CubeBuilder {
-    private List<Dimension> dimensions;
-    private List<Cell> cells;
-    private List<String> foreignKeys;
-    private List<String> facts;
+    private List<Dimension> dimensions;         // Lista de dimensiones
+    private List<Cell> cells;                   // Lista de celdas
+    private List<String> foreignKeys;           // Lista de claves foráneas
+    private List<String> facts;                 // Lista de hechos
 
+    /**
+     * Constructor de la clase
+     */
     public CubeBuilder() {
         this.dimensions = new ArrayList<>();
         this.cells = new ArrayList<>();
@@ -33,6 +33,15 @@ public class CubeBuilder {
         this.facts = new ArrayList<>();
     }
 
+    /**
+     * Método que añade una dimensión a la configuración del cubo
+     * 
+     * @param name Nombre de la dimensión
+     * @param idKey Nombre de clave de identificación que conecta a la dimensión a los hechos
+     * @param model Modelo de tipos de datos de la dimensión
+     * @param parser Lector de los datos
+     * @param path Ruta al archivo de datos
+     */
     public void addDimension(String name, String idKey, List<DataType> model, DataParser parser, String path) throws IOException {
         Map<String, Level> levels = new HashMap<>();
         List<List<String>> data = parser.read(path);
@@ -78,6 +87,13 @@ public class CubeBuilder {
         this.dimensions.add(new Dimension(name, idKey, levels, hierarchy));
     }
 
+    /**
+     * Método para añadir los hechos al cubo
+     * 
+     * @param name Nombre de los hechos
+     * @param parser Lector de los datos
+     * @param path Ruta al archivo de datos
+     */
     public void addFacts(String name, DataParser parser, String path) throws IOException {
         List<List<String>> data = parser.read(path);
         List<String> headers = data.get(0);
@@ -112,6 +128,11 @@ public class CubeBuilder {
         }
     }
 
+    /**
+     * Método que crea y devuelve un cubo OLAP construido con la configuración dada previamente
+     * 
+     * @return Nuevo cubo OLAP
+     */
     public Cube buildCube() {
         Cube cube = new Cube();
         for (Dimension d : this.dimensions) {
@@ -127,6 +148,11 @@ public class CubeBuilder {
         return cube;
     }
 
+    /**
+     * Método privado que le agrega los tipos de medidas al cubo
+     * 
+     * @param cube Cubo al que se le añaden las medidas
+     */
     private void addMeasures(Cube cube) {
         cube.addMeasure(new Count());
         cube.addMeasure(new Sum());

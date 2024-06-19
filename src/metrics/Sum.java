@@ -2,6 +2,9 @@ package metrics;
 
 import java.util.List;
 
+/**
+ * La clase Sum representa una medida de suma
+ */
 public class Sum extends Measure{
 
     public Sum() {

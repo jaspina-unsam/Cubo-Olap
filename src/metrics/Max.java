@@ -3,6 +3,9 @@ package metrics;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * La clase Max representa una medida de valor máximo
+ */
 public class Max extends Measure{
 
     public Max() {
