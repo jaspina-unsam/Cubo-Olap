@@ -34,7 +34,8 @@ public class CubeBuilder {
     }
 
     /**
-     * Método que añade una dimensión a la configuración del cubo
+     * Método que añade una dimensión a la configuración del cubo.
+     * No se puede agregar una dimensión si el modelo de tipos de datos y los datos de la dimensión no coinciden, si la clave foránea no está en la dimensión, o si el cubo ya tiene hechos 
      * 
      * @param name Nombre de la dimensión
      * @param idKey Nombre de clave de identificación que conecta a la dimensión a los hechos
@@ -53,6 +54,9 @@ public class CubeBuilder {
         }
         if (headers.indexOf(idKey) == -1) {
             throw new IOException("The id key does not exist in the data");
+        }
+        if (facts.size() != 0) {
+            throw new IOException("Facts have already been set");
         }
 
         foreignKeys.add(idKey);
@@ -88,7 +92,8 @@ public class CubeBuilder {
     }
 
     /**
-     * Método para añadir los hechos al cubo
+     * Método para añadir los hechos al cubo.
+     * No se pueden agregar hechos si no hay dimensiones cargadas, si el número de dimensiones y cláves foráneas no coincide, si las claves foráneas no existen en los datos, o si ya se cargaron hechos anteriormente
      * 
      * @param name Nombre de los hechos
      * @param parser Lector de los datos
@@ -98,6 +103,7 @@ public class CubeBuilder {
         List<List<String>> data = parser.read(path);
         List<String> headers = data.get(0);
 
+        // Validaciones
         if (foreignKeys.size() == 0) {
             throw new IOException("There are no dimensions to relate the facts");
         } else if (dimensions.size() != foreignKeys.size()) {
@@ -105,6 +111,9 @@ public class CubeBuilder {
         }
         if (!headers.containsAll(foreignKeys)) {
             throw new IOException("The foreign keys do not exist in the data");
+        }
+        if (facts.size() != 0) {
+            throw new IOException("Facts have already been set");
         }
 
         this.facts.addAll(headers);

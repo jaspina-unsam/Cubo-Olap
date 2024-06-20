@@ -7,8 +7,8 @@ import java.util.List;
  * La clase Level representa un nivel de una dimensión
  */
 public class Level {
-    private String name; // Nombre del nivel
-    private List<Object> elements; // Lista de elementos del nivel
+    private String name;                // Nombre del nivel
+    private List<Object> elements;      // Lista de elementos del nivel
 
     /**
      * Constructor de la clase
