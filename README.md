@@ -69,7 +69,7 @@ TablePrinter.display(cube, "fechas");   // Muestro solo la dimensión fechas
 
 En este ejemplo, se elije mostrar la dimensión fechas, pero podría haber sido cualquier otra.
 
-### Operar al cubo y `display()` para una sola dimensión
+### Operar al cubo y `display()` para dos dimensiones
 ```java
 // Ejemplo para responder la pregunta de negocio ¿Cuáles fueron los tickets más bajos en California, Alabama y Arizona (EE.UU.)?
 
