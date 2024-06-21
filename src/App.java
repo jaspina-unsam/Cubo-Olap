@@ -13,38 +13,30 @@ public class App {
         List<List<String>> csvProductos = csvParser.read("src/data/productos.csv");
         List<List<String>> csvPuntosVenta = csvParser.read("src/data/puntos_venta.csv");
         List<List<String>> csvVentas = csvParser.read("src/data/ventas.csv");
-        
+
         cube = cube.addDimension(
-            "fechas",
-            new Dimension(
-                csvFechas,
-                Model.FECHA_DATA_TYPES
-            ));
+                "fechas",
+                new Dimension(
+                        csvFechas,
+                        Model.FECHA_DATA_TYPES));
         cube = cube.addDimension(
-            "productos",
-            new Dimension(
-                csvProductos,
-                Model.PRODUCTO_DATA_TYPES
-            )
-        );
+                "productos",
+                new Dimension(
+                        csvProductos,
+                        Model.PRODUCTO_DATA_TYPES));
         cube = cube.addDimension(
-            "puntos_venta",
-            new Dimension(
-                csvPuntosVenta,
-                Model.PUNTO_VENTA_DATA_TYPES
-            )
-        );
+                "puntos_venta",
+                new Dimension(
+                        csvPuntosVenta,
+                        Model.PUNTO_VENTA_DATA_TYPES));
         cube = cube.addFacts(
-            new Facts(
-                csvVentas,
-                Model.VENTAS_DATA_TYPES,
-                List.of(
-                    "id_producto",
-                    "id_fecha",
-                    "id_punto_venta"
-                )
-            )
-        );
+                new Facts(
+                        csvVentas,
+                        Model.VENTAS_DATA_TYPES,
+                        List.of(
+                                "id_producto",
+                                "id_fecha",
+                                "id_punto_venta")));
 
         System.out.println(cube.getDimensionNames());
         System.out.println(cube.getDimension("fechas").getLevels());
@@ -52,9 +44,11 @@ public class App {
         System.out.println(cube.getLevel("fechas", "quarter"));
         System.out.println(cube.getLevel("fechas", "anio"));
 
-        System.out.println(cube.getDimension("fechas").getIdList("quarter","3"));
-        System.out.println(cube.getDimension("fechas").getIdList("fecha","2017-07-10"));
+        System.out.println(cube.getDimension("fechas").getIdList("quarter", "3"));
+        System.out.println(cube.getDimension("fechas").getIdList("fecha", "2017-07-10"));
+
         System.out.println(cube.getFeatureNames());
         System.out.println("el cubo se llama " + cube.getCubeName());
+
     }
 }
