@@ -16,6 +16,9 @@ import metrics.*;
 
 /**
  * La clase CubeBuilder representa la configuración para la creación de un cubo OLAP.
+ *
+ * Es un humilde acercamiento al patrón de diseño Builder.
+ * Se encarga de cargar las dimensiones, hechos y medidas al cubo.
  */
 public class CubeBuilder {
     private List<Dimension> dimensions;         // Lista de dimensiones
@@ -23,9 +26,7 @@ public class CubeBuilder {
     private List<String> foreignKeys;           // Lista de claves foráneas
     private List<String> facts;                 // Lista de hechos
 
-    /**
-     * Constructor de la clase
-     */
+
     public CubeBuilder() {
         this.dimensions = new ArrayList<>();
         this.cells = new ArrayList<>();
@@ -34,16 +35,15 @@ public class CubeBuilder {
     }
 
     /**
-     * Método que añade una dimensión a la configuración del cubo.
-     * No se puede agregar una dimensión si el modelo de tipos de datos y los datos de la dimensión no coinciden, si la clave foránea no está en la dimensión, o si el cubo ya tiene hechos 
-     * 
-     * @param name Nombre de la dimensión
-     * @param idKey Nombre de clave de identificación que conecta a la dimensión a los hechos
-     * @param model Modelo de tipos de datos de la dimensión
-     * @param parser Lector de los datos
-     * @param path Ruta al archivo de datos
+     * Lee y parsea las dimensiones desde un archivo indicado en path.
      */
-    public void addDimension(String name, String idKey, List<DataType> model, DataParser parser, String path) throws IOException {
+    public void addDimension(
+        String name,
+        String idKey,
+        List<DataType> model,
+        DataParser parser,
+        String path
+    ) throws IOException {
         Map<String, Level> levels = new HashMap<>();
         List<List<String>> data = parser.read(path);
         List<String> headers = data.get(0);
@@ -92,12 +92,7 @@ public class CubeBuilder {
     }
 
     /**
-     * Método para añadir los hechos al cubo.
-     * No se pueden agregar hechos si no hay dimensiones cargadas, si el número de dimensiones y cláves foráneas no coincide, si las claves foráneas no existen en los datos, o si ya se cargaron hechos anteriormente
-     * 
-     * @param name Nombre de los hechos
-     * @param parser Lector de los datos
-     * @param path Ruta al archivo de datos
+     * Lee y parsea los hechos desde un archivo indicado en path.
      */
     public void addFacts(String name, DataParser parser, String path) throws IOException {
         List<List<String>> data = parser.read(path);
@@ -129,7 +124,9 @@ public class CubeBuilder {
                     if (facts.containsKey(headers.get(j))) {
                         facts.get(headers.get(j)).add(Double.parseDouble(data.get(i).get(j)));
                     } else {
-                        facts.put(headers.get(j), new ArrayList<>(Arrays.asList(Double.parseDouble(data.get(i).get(j)))));
+                        facts.put(headers.get(j), new ArrayList<>(
+                            Arrays.asList(Double.parseDouble(data.get(i).get(j)))
+                        ));
                     }
                 }
             }
@@ -138,9 +135,8 @@ public class CubeBuilder {
     }
 
     /**
-     * Método que crea y devuelve un cubo OLAP construido con la configuración dada previamente
-     * 
-     * @return Nuevo cubo OLAP
+     * Construye el cubo con las dimensiones y hechos ya parseados.
+     * Las medidas son añadidas automáticamente.
      */
     public Cube buildCube() {
         Cube cube = new Cube();
@@ -159,7 +155,7 @@ public class CubeBuilder {
 
     /**
      * Método privado que le agrega los tipos de medidas al cubo
-     * 
+     *
      * @param cube Cubo al que se le añaden las medidas
      */
     private void addMeasures(Cube cube) {

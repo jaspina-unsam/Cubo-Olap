@@ -10,14 +10,12 @@ import metrics.Measure;
 
 /**
  * La clase TablePrinter imprime en consola los datos de un cubo.
- * El método display() recibe un cubo con cierto estado y una, dos o cero dimensiones e imprime sus datos de forma tabular.
+ * El método display() está sobrecargado; imprime los datos en forma de tabla por CLI.
  */
 public class TablePrinter {
 
     /**
-     * Método que muestra en consola los datos del cubo seleccionado con el hecho y la medida actuales.
-     * 
-     * @param cube Cubo que se quiere mostrar
+     * Impresión en pantalla con todas las dimensiones reducidas a una sola celda.
      */
     public static void display(Cube cube) {
         String selectedFact = cube.getSelectedFact();
@@ -31,10 +29,9 @@ public class TablePrinter {
     }
 
     /**
-     * Método para mostrar en consola los datos del cubo con una dimensión específica
-     * 
-     * @param cube Cubo que se quiera mostrar
-     * @param dimension Nombre de la dimensión que se quiera usar para representar al cubo
+     * Impresión en pantalla de una tabla de N+1 filas y 2 columnas.
+     * Las N filas corresponden a los elementos únicos del nivel activo de la dimensión.
+     * La primera columna son las etiquetas, la segunda los valores.
      */
     public static void display(Cube cube, String dimension) {
         Level lvl = cube.getDimension(dimension).getActiveLevel();
@@ -56,11 +53,11 @@ public class TablePrinter {
     }
 
     /**
-     * Método que representa los datos del cubo para dos dimensiones específicas.
-     * 
-     * @param cube Cubo que se quiere mostrar
-     * @param rowDim Nombre de la dimensión que se quiere usar para las filas
-     * @param colDim Nombre de la dimensión que se quiere usar para las columnas
+     * Impresión en pantalla de una tabla de N+1 x M+1.
+     * Las N filas corresponden a los elementos únicos del nivel activo de la dimensión rowDim.
+     * Las M columnas corresponden a los elementos únicos del nivel activo de la dimensión colDim.
+     * A diferencia del display con una sola dimensión, se agrega un mensaje adicional,
+     * que informa las dimensiones y medidas seleccionadas.
      */
     public static void display(Cube cube, String rowDim, String colDim) {
         Level rowLevel = cube.getDimension(rowDim).getActiveLevel();
@@ -95,9 +92,7 @@ public class TablePrinter {
     }
 
     /**
-     * Método para imprimir la tabla formateada en la consola.
-     * 
-     * @param tableData Datos de la tabla a imprimir
+     * Usa la tableData y la imprime en pantalla.
      */
     private static void print(String[][] tableData) {
         if (tableData == null || tableData.length == 0) {
@@ -116,10 +111,7 @@ public class TablePrinter {
     }
 
     /**
-     * Método que calcula el ancho de cada columna basado en los datos.
-     * 
-     * @param tableData Datos de la tabla
-     * @return Array de anchos de columna
+     * Método auxiliar de print() que calcula los tamaños.
      */
     private static int[] getColumnWidths(String[][] tableData) {
         int columns = tableData[0].length;
@@ -136,9 +128,7 @@ public class TablePrinter {
     }
 
     /**
-     * Método que imprime una línea de separación basada en los anchos de columna.
-     * 
-     * @param columnWidths Array de anchos de columna
+     * Método auxiliar de print() que imprime las líneas divisorias horizontales.
      */
     private static void printSeparator(int[] columnWidths) {
         for (int width : columnWidths) {
@@ -151,10 +141,7 @@ public class TablePrinter {
     }
 
     /**
-     * Método para imprimir una fila de datos de la tabla.
-     * 
-     * @param row Fila de datos
-     * @param columnWidths Anchos de columna
+     * Método auxiliar de print() que imprime las filas de la tabla.
      */
     private static void printRow(String[] row, int[] columnWidths) {
         for (int i = 0; i < row.length; i++) {

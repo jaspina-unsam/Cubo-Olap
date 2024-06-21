@@ -17,4 +17,9 @@ public abstract class Measure {
     }
 
     public abstract double calc(List<Double> values);
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

@@ -11,28 +11,26 @@ import java.util.regex.Pattern;
 
 /**
  * La clase CsvParser implementa la interfaz DataParser y lee datos de un archivo CSV.
+ *
  * @see DataParser
  */
 public class CsvParser implements DataParser {
-    private String delimiter;           // Delimitador que usa para determinar que carácter separa las columnas
-    private boolean dropIndex;          // Booleano que determina si ignora el índice o no
+    private String delim;
+    private boolean dropIndex; // Dropea la primera columna del CSV si es verdadero
 
-    /**
-     * Constructor por defecto de la clase
-     */
     public CsvParser() {
-        this.delimiter = ";";
+        this.delim = ";";
         this.dropIndex = false;
     }
 
     /**
      * Constructor de la clase
-     * 
-     * @param delimeter Delimitador que usa para determinar que carácter separa las columnas
-     * @param dropIndex Booleano que determina si ignora el índice o no
+     *
+     * @param delim     Delimitador de los campos del CSV
+     * @param dropIndex Indica si se debe dropear la primera columna del CSV
      */
     public CsvParser(String delimiter, boolean dropIndex) {
-        this.delimiter = delimiter;
+        this.delim = delimiter;
         this.dropIndex = dropIndex;
     }
 
@@ -43,7 +41,7 @@ public class CsvParser implements DataParser {
         String line;
         while ((line = buffer.readLine()) != null) {
             List<String> values = splitLine(line);
-            if (dropIndex) {
+            if (this.dropIndex) {
                 data.add(values.subList(1, values.size()));
             } else {
                 data.add(values);
@@ -56,26 +54,33 @@ public class CsvParser implements DataParser {
 
     /**
      * Método para dividir un string en una lista de strings.
+     *
      * @param inputString String a dividir
-     * @return List<String> lista de strings 
+     * @return List<String> lista de strings
      */
     private List<String> splitLine(String inputString) {
         List<String> splitList = new ArrayList<>();
         String outputString = inputString;
-        String auxDelimiter = "+";
+        String aux = "+";
 
         Pattern p = Pattern.compile("(\"[^\"]*\")");
         Matcher m = p.matcher(inputString);
         if (m.find()) {
+            /**
+             * Si el string contiene comillas,
+             * se reemplazan los delimitadores internos por un caracter auxiliar
+             */
             String target = m.group(1);
-            String replaced = target.replace(delimiter, auxDelimiter).replace("\"", "");
+            String replaced = target.replace(this.delim, aux).replace("\"", "");
             outputString = inputString.replace(target, replaced);
-            for (String v : outputString.split(delimiter)) {
-                splitList.add(v.replace(auxDelimiter, delimiter));
+            for (String v : outputString.split(this.delim)) {
+                splitList.add(v.replace(aux, this.delim));
             }
-        }
-        else {
-            splitList = Arrays.asList(outputString.split(delimiter));
+        } else {
+            /**
+             * En cualquier otro caso, se divide usando el delimitador normal
+             */
+            splitList = Arrays.asList(outputString.split(this.delim));
         }
 
         return splitList;

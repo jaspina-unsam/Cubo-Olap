@@ -20,6 +20,7 @@ public class App {
 
         // buildear el cubo
         Cube cube = builder.buildCube();
+        System.out.println(cube.toString());
         Cube cube2 = builder.buildCube();
 
         cube.selectFact("cantidad");
