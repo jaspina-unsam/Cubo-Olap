@@ -105,8 +105,7 @@ public class Cube {
     }
 
     /**
-     * Utiliza el método cellFromGroup() de Cell para agrupar los valores de las
-     * celdas.
+     * Utiliza el método cellFromGroup() de Cell para agrupar los valores de las celdas.
      */
     public Cell getCell() {
         return Cell.cellFromGroup(this.cells);
@@ -182,8 +181,7 @@ public class Cube {
     }
 
     /**
-     * Sobrecarga para searchCells(), usando las celdas que la instancia del cubo
-     * posee.
+     * Sobrecarga para searchCells(), usando las celdas que la instancia del cubo posee.
      */
     private List<Cell> searchCells(String dimension, String key, String[] values) {
         return searchCells(this.cells, dimension, key, values);
@@ -266,8 +264,7 @@ public class Cube {
 
     /**
      * Dice.
-     * Devuelve un subcubo con los valores de corte especificados para una
-     * dimensión.
+     * Devuelve un subcubo con los valores de corte especificados para una dimensión.
      *
      * @param dimension Nombre de la dimensión
      * @param values    Valores a filtrar
